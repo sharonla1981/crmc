@@ -216,7 +216,7 @@ class RequestController extends Controller
                 
                 $requests = Request::model()->findAll(
                             array(
-                                'select'=>array("count(id) as id","Date(open_time) as open_time"),
+                                'select'=>array("*,count(id) as id","Date(open_time) as open_time"),
                                 'group'=>'Date(open_time)',
                                 'condition'=>"open_time>='$par_open_time_from' AND open_time<='$par_open_time_to' $par_type_id "
                             )
@@ -229,6 +229,8 @@ class RequestController extends Controller
                         $result[] = array(
                             //'openTime' => $request->open_time,
                             'id' => $request->id,
+                            'type_name' =>$request->type->name,
+                            'department_name' => $request->dpt->name,
                             'open_time' => $open_day//$request->open_time,
                     );
 

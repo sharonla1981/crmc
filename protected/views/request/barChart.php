@@ -18,9 +18,20 @@ $dpt = $this->getFilterValues('dpt_id','dpt');
 $this->menu=$dpt;
 
 ?>
-<script>
-
-</script>
+<style>
+    #chart {
+        width: 600px;
+    }
+    #grid {
+        width: 600px;
+        direction:rtl;    
+    }
+    .k-grid-content{
+        overflow-y: auto;
+        text-align: right;
+    }
+    
+</style>
 <div id="filter_pane">
         <div id="date_range">
                     <div class="k-rtl" >
@@ -40,8 +51,9 @@ $this->menu=$dpt;
 <div id="example" >
             <div>
                 <div id="chart" style="background: center no-repeat url('protected/vendors/kendo/styles/images/world-map.png');"></div>
+                <div id="grid"></div>
             </div>
-    
+            
             <script>
                 
                 var items = [];
@@ -50,14 +62,13 @@ $this->menu=$dpt;
                 {
                     _items = {};
                     items = [];
-                    
+                    var i=0;
                     
                     
                     $('ul.selectionGroup').each(function(){
                         var fk_field = $(this).attr('fkfield');
-                        var i=0;
                             $(this).children().each(function() {
-                                i=0;
+                                
                               if ($(this).hasClass('selected'))
                               {
                                   var item = { id: $(this).attr('itemid') };
@@ -68,20 +79,59 @@ $this->menu=$dpt;
                         if (i==1)
                             {
                                 _items[fk_field] = items;
+                                i=0;
                             }
                         items = [];
                     });
                     
                    
                     _items = JSON.stringify(_items);
-                                    
-                    
-                    //items = JSON.stringify(items);
-                }
+                   
+                   }
                 
+                
+                var ds1 = new kendo.data.DataSource({
+                    transport: {
+                        read: {
+                            
+                                    type: "POST",
+                                    url: "http://localhost/crmc/index.php?r=request/returnJson",
+                                    dataType: "json",
+                                    data: {
+                                        open_time_from: function() { 
+                                            return $("#start").val();
+                                        },
+                                        open_time_to: function() { 
+                                            return $("#end").val();
+                                        },
+                                        filters_array: function() {
+                                            //count items in the _items Object
+                                            var count = 0;
+                                            for (var k in _items) {
+                                                if (_items.hasOwnProperty(k)) {
+                                                   ++count;
+                                                }
+                                            }
+                                            
+                                            if (count > 0)
+                                                {
+                                                    return _items;
+                                                }
+                                                else 
+                                                    {
+                                                        return null;
+                                                    }
+                                        }
+                                        
+                                    }
+                            
+                        }
+                    }
+                });
+                //creaing the chart
                 function createChart() {
                     $("#chart").kendoChart({
-                      dataSource: {
+                      dataSource: ds1, /*{
                             transport: {
                                 read: {
                                     type: "POST",
@@ -119,8 +169,8 @@ $this->menu=$dpt;
                             sort: {
                                 field: "open_day",
                                 dir: "asc"
-                            },
-                        },
+                            }
+                        },*/
                         title: {
                             text: "פניות לקוחות לפי תאריך"
                         },
@@ -128,13 +178,13 @@ $this->menu=$dpt;
                             position: "left"
                         },
                         seriesDefaults: {
-                            type: "line",
+                            type: "line"
                         },
                         series:
                         [{
                             field: "id",
                             //aggregate: "count",
-                            name: "פניות",
+                            name: "פניות"
                             
                             
                         }],
@@ -142,10 +192,10 @@ $this->menu=$dpt;
                             field: "open_time",
                             //baseUnit: "weeks",
                             labels: {
-                                rotation: -90,
+                                rotation: -90
                                 //format: "M/d"
                                 
-                            },
+                            }
                             //type: "numeric",
                             
                             
@@ -159,12 +209,45 @@ $this->menu=$dpt;
                         tooltip: {
                             visible: true,
                             format: "N0"
-                        },
+                        }
                         
                         
                     });
                 }
-
+                
+                function createGrid() {
+                    $("#grid").kendoGrid({
+                        dataSource: ds1,
+                        autoBind: false,
+                        sortable: {
+                            allowUnsort: false
+                        },
+                        columns: [
+                            {
+                                field: "open_time",
+                                title: "תאריך פתיחה",
+                                width: "100px"
+                            },
+                            {
+                                field: "type_name",
+                                title: "סוג פניה"
+                                //template: '#= kendo.toString(value, "N0") #'
+                            },
+                            {
+                                field: "id",
+                                title: "כמות",
+                                //template: '#= kendo.toString(growth, "p") #',
+                                width: "100px"
+                            },
+                            {
+                                field: "department_name",
+                                title: "מחלקה"
+                            }
+                                
+                        ]
+                    });
+                }
+                
                 $(document).ready(function() {
                     
                     /**
@@ -190,9 +273,9 @@ $this->menu=$dpt;
                                if ($(this).parent().attr('selectionType') == "radio")
                                    {
                                        //remove all li element 'selected' class.
-                                       $(this).parent().each(function(i,e){
-                                               $(e).children('li').removeClass('selected');
-                                            });
+                                         $(this).parent().children().each(function() {
+                                            $(this).removeClass('selected'); 
+                                         });
                                             
                                             //add 'selected' class to the li has been clicked.
                                             $(this).addClass('selected');
@@ -211,13 +294,13 @@ $this->menu=$dpt;
                         // Initialize the chart with a delay to make sure
                         // the initial animation is visible
                         createChart();
-                        
+                        createGrid();
                         $("#example").bind("kendo:skinChange", function(e) {
                             createChart();
                         });
                     }, 400);
                     
-                    //alert($("#datevalue").val());
+                    
                     $("#start").change(function(){
                         refresh();
                     });

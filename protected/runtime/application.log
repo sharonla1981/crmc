@@ -1737,3 +1737,19 @@ Stack trace:
 #23 {main}
 REQUEST_URI=/crmc/index.php?r=request/barChart
 ---
+2013/04/04 00:05:07 [error] [php] Trying to get property of non-object (D:\Program Files\Zend\Apache2\htdocs\crmc\protected\controllers\RequestController.php:232)
+Stack trace:
+#0 D:\Program Files\Zend\Apache2\yii\framework\web\filters\CFilterChain.php(134): RequestController->runAction()
+#1 D:\Program Files\Zend\Apache2\yii\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#2 D:\Program Files\Zend\Apache2\yii\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#3 D:\Program Files\Zend\Apache2\yii\framework\web\filters\CInlineFilter.php(59): RequestController->filterAccessControl()
+#4 D:\Program Files\Zend\Apache2\yii\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#5 D:\Program Files\Zend\Apache2\yii\framework\web\CController.php(292): CFilterChain->run()
+#6 D:\Program Files\Zend\Apache2\yii\framework\web\CController.php(266): RequestController->runActionWithFilters()
+#7 D:\Program Files\Zend\Apache2\yii\framework\web\CWebApplication.php(283): RequestController->run()
+#8 D:\Program Files\Zend\Apache2\yii\framework\web\CWebApplication.php(142): CWebApplication->runController()
+#9 D:\Program Files\Zend\Apache2\yii\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#10 D:\Program Files\Zend\Apache2\htdocs\crmc\index.php(13): CWebApplication->run()
+REQUEST_URI=/crmc/index.php?r=request/returnJson
+in D:\Program Files\Zend\Apache2\htdocs\crmc\protected\controllers\RequestController.php (232)
+in D:\Program Files\Zend\Apache2\htdocs\crmc\index.php (13)

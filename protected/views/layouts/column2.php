@@ -1,12 +1,12 @@
 <?php /* @var $this Controller */ ?>
 <?php $this->beginContent('//layouts/main'); ?>
 <div class="span-32">
-	<div id="content">
+	<div id="content" >
 		<?php echo $content; ?>
 	</div><!-- content -->
 </div>
-<div class="span-12" style="text-align: right;">
-	<div id="sidebar">
+<div class="span-8" style="text-align: right;margin-left: 200px;">
+    <div id="sidebar">
            
 	<?php
 		//request type widget menu
@@ -25,7 +25,7 @@
 			'itemCssClass'=>'selectable',
                         'filterGroupName'=>'Department',
                         'fkField'=>'dpt_id',
-                        'inline'=>true,
+                        'inline'=>false,
                         'selectionType'=>'multi',
 		));
 		
@@ -37,7 +37,10 @@
     li.selected {
         background-color: orange;
     }
-    .selectable { list-style-type: none; margin: 0; padding: 0; width: 40%;}
+    .selectable { list-style-type: none; margin: 0; padding: 0; width: 40%; }
     .selectable { margin: 3px; padding: 0.4em; font-size: 1.0em; height: 14px; border: 1px solid #999999}
     
+    .selectionGroup {
+        
+    }
 </style>
